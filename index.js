@@ -37,7 +37,32 @@ app.post('/register', async (req, res) => {
   const newUser = new User({
     email,
     password: hashedPassword
+
+    
   });
+
+  try {
+    // Kullanıcıyı email ile ara
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    // Şifreyi doğrula
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Geçersiz şifre.' });
+    }
+
+    // JWT token oluştur
+    const token = jwt.sign({ userId: user._id }, 'secretkey', { expiresIn: '1h' });
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Bir hata oluştu. Lütfen tekrar deneyin.' });
+  }
+  
 
   await newUser.save();
 
