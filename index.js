@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB bağlantısı
-mongoose.connect('mongodb://localhost:27017/recon', {
+mongoose.connect('mongodb+srv://vestia:vestia@vestia.wycebzt.mongodb.net/Vestia', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
